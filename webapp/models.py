@@ -8,11 +8,10 @@ from sqlalchemy.orm import declarative_base, relationship, sessionmaker, scoped_
 # Normalize DATABASE_URL for SQLAlchemy. Heroku and some providers export
 # URLs beginning with "postgres://", but SQLAlchemy expects "postgresql://".
 raw_db_url = os.getenv("DATABASE_URL", "sqlite:///app.db")
-# Normalize scheme for SQLAlchemy (case-insensitive) and prefer explicit driver
-prefix = raw_db_url[:10].lower()
-if raw_db_url and prefix.startswith("postgres://"):
+# Normalize scheme for SQLAlchemy and prefer explicit driver
+if raw_db_url and raw_db_url.lower().startswith("postgres://"):
     raw_db_url = "postgresql+psycopg2://" + raw_db_url.split("://", 1)[1]
-elif raw_db_url and prefix.startswith("postgresql://"):
+elif raw_db_url and raw_db_url.lower().startswith("postgresql://"):
     raw_db_url = "postgresql+psycopg2://" + raw_db_url.split("://", 1)[1]
 DATABASE_URL = raw_db_url
 
