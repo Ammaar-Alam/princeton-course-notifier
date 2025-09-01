@@ -3,9 +3,8 @@ from datetime import datetime
 
 from flask import Flask, redirect, render_template, request, session, url_for, flash
 
-from models import db_session, init_db, User, Subscription, upsert_user
-from student_api import StudentAppClient, latest_term_code, resolve_course_to_ids
-from worker import enqueue_refresh_flag
+from .models import db_session, init_db, User, Subscription, upsert_user
+from .student_api import StudentAppClient, latest_term_code, resolve_course_to_ids
 
 
 def create_app():
@@ -118,7 +117,6 @@ def create_app():
                     )
                     db_session.add(sub)
             db_session.commit()
-            enqueue_refresh_flag()
             flash("Subscribed", "success")
         except Exception as e:
             flash(str(e), "error")
@@ -134,7 +132,6 @@ def create_app():
         if sub:
             db_session.delete(sub)
             db_session.commit()
-            enqueue_refresh_flag()
             flash("Unsubscribed", "success")
         return redirect(url_for("dashboard"))
 
@@ -142,4 +139,3 @@ def create_app():
 
 
 app = create_app()
-

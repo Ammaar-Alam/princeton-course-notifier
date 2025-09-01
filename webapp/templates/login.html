@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <h2>Login</h2>
+  <p class="muted">Enter your access token to manage your subscriptions.</p>
+  <form method="post">
+    <div class="row"><input type="text" name="token" placeholder="Access token" /></div>
+    <div class="row"><input type="submit" value="Continue" /></div>
+  </form>
+{% endblock %}
+
