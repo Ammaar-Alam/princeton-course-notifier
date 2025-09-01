@@ -5,7 +5,12 @@ from sqlalchemy import Column, Integer, String, DateTime, create_engine, Foreign
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker, scoped_session
 
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///app.db")
+# Normalize DATABASE_URL for SQLAlchemy. Heroku and some providers export
+# URLs beginning with "postgres://", but SQLAlchemy expects "postgresql://".
+raw_db_url = os.getenv("DATABASE_URL", "sqlite:///app.db")
+if raw_db_url.startswith("postgres://"):
+    raw_db_url = raw_db_url.replace("postgres://", "postgresql://", 1)
+DATABASE_URL = raw_db_url
 
 engine = create_engine(DATABASE_URL, future=True)
 SessionLocal = scoped_session(sessionmaker(bind=engine, autoflush=False, autocommit=False, future=True))
@@ -47,4 +52,3 @@ def upsert_user(token: str) -> User:
         db_session.add(u)
         db_session.commit()
     return u
-
