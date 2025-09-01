@@ -51,7 +51,8 @@ def run_loop():
             course_ids_csv = ",".join(groups.keys())
             seats = client.get_seats(term=term, course_ids_csv=course_ids_csv)
             courses = seats.get("course", []) if isinstance(seats, dict) else []
-            now = datetime.now(TZ)
+            # Use naive UTC timestamps so comparisons don't fail on tz-aware vs naive
+            now = datetime.utcnow()
             for course in courses:
                 courseid = str(course.get("course_id"))
                 cls_map = {s.classid: s for s in groups.get(courseid, [])}
