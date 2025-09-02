@@ -1,23 +1,26 @@
 {% extends 'layout.html' %}
 {% block content %}
-  <h2>Search</h2>
-  <form method="get">
-    <div class="row"><input type="text" name="code" value="{{ code or '' }}" placeholder="e.g., COS333" /></div>
-    <div class="row"><input type="submit" value="Find Sections" /></div>
-  </form>
-  {% if error %}
-    <div class="flash error">{{ error }}</div>
-  {% endif %}
-  {% if sections %}
-    <hr />
-    <form method="post" action="/subscribe">
-      <input type="hidden" name="course_code" value="{{ code }}" />
-      <p>Select sections to subscribe:</p>
-      {% for s in sections %}
-        <div><label><input type="checkbox" name="sections" value="{{ s.classid }}" /> {{ s.section }} (class {{ s.classid }})</label></div>
-      {% endfor %}
-      <div class="row"><input type="submit" value="Subscribe" /></div>
+  <div class="card">
+    <div class="section-title">Search</div>
+    <form method="get">
+      <div class="row"><input type="text" name="code" value="{{ code or '' }}" placeholder="e.g., COS333" /></div>
+      <div class="row"><input type="submit" value="Find Sections" /></div>
     </form>
+    {% if error %}
+      <div class="flash error">{{ error }}</div>
+    {% endif %}
+  </div>
+  {% if sections %}
+    <div class="row"></div>
+    <div class="card">
+      <div class="section-title">Select sections to watch</div>
+      <form method="post" action="/subscribe">
+        <input type="hidden" name="course_code" value="{{ code }}" />
+        {% for s in sections %}
+          <div class="row"><label><input type="checkbox" name="sections" value="{{ s.classid }}" /> {{ s.section }} <span class="muted">(class {{ s.classid }})</span></label></div>
+        {% endfor %}
+        <div class="row"><input type="submit" value="Subscribe" /></div>
+      </form>
+    </div>
   {% endif %}
 {% endblock %}
-

@@ -23,7 +23,9 @@ def create_app():
                 upsert_user(token)
                 return redirect(url_for("dashboard"))
             flash("Invalid token", "error")
-        return render_template("login.html")
+        poll_interval = int(os.getenv("INTERVAL_SECS", "30"))
+        renotify_secs = int(os.getenv("MIN_RENOTIFY_SECS", "20"))
+        return render_template("login.html", poll_interval=poll_interval, renotify_secs=renotify_secs)
 
     def _require_login():
         tok = session.get("token")
@@ -37,6 +39,10 @@ def create_app():
             return redirect(url_for("login"))
         return redirect(url_for("dashboard"))
 
+    @app.route("/healthz")
+    def healthz():
+        return "ok", 200
+
     @app.route("/dashboard")
     def dashboard():
         if not _require_login():
@@ -49,7 +55,9 @@ def create_app():
             .order_by(Subscription.course_code, Subscription.classid)
             .all()
         )
-        return render_template("dashboard.html", user=user, subs=subs)
+        poll_interval = int(os.getenv("INTERVAL_SECS", "30"))
+        renotify_secs = int(os.getenv("MIN_RENOTIFY_SECS", "20"))
+        return render_template("dashboard.html", user=user, subs=subs, poll_interval=poll_interval, renotify_secs=renotify_secs)
 
     @app.route("/set_topic", methods=["POST"])
     def set_topic():

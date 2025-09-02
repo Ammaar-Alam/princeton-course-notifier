@@ -1,47 +1,56 @@
 {% extends 'layout.html' %}
 {% block content %}
-  <h2>Dashboard</h2>
-  <form method="post" action="/set_topic">
-    <div class="row">
-      <label>ntfy topic</label>
-      <input type="text" name="ntfy_topic" value="{{ user.ntfy_topic or '' }}" placeholder="your-long-random-topic" />
+  <div class="grid">
+    <div class="card">
+      <div class="section-title">Notifications</div>
+      <form method="post" action="/set_topic">
+        <div class="row">
+          <label class="muted">ntfy topic</label>
+          <input type="text" name="ntfy_topic" value="{{ user.ntfy_topic or '' }}" placeholder="your-long-random-topic" />
+        </div>
+        <div class="row"><input type="submit" value="Save Topic" /></div>
+      </form>
+      <div class="row muted">Polling: {{ poll_interval }}s • Re‑notify: {{ renotify_secs }}s</div>
     </div>
-    <div class="row"><input type="submit" value="Save Topic" /></div>
-  </form>
 
-  <hr />
-  <h3>Your Subscriptions</h3>
-  {% if subs %}
-    <table>
-      <thead>
-        <tr><th>Course</th><th>Section</th><th>ClassID</th><th>CourseID</th><th>Last Notified</th><th></th></tr>
-      </thead>
-      <tbody>
-        {% for s in subs %}
-          <tr>
-            <td>{{ s.course_code }}</td>
-            <td>{{ s.section }}</td>
-            <td>{{ s.classid }}</td>
-            <td>{{ s.course_id }}</td>
-            <td class="muted">{{ (s.last_notified_at.strftime('%Y-%m-%d %H:%M:%S') if s.last_notified_at else '-') ~ ' | ' ~ (s.last_notified_open if s.last_notified_open>=0 else '-') }}</td>
-            <td>
-              <form method="post" action="/unsubscribe/{{ s.id }}">
-                <button type="submit">Remove</button>
-              </form>
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% else %}
-    <p class="muted">No subscriptions yet.</p>
-  {% endif %}
+    <div class="card">
+      <div class="section-title">Add Course</div>
+      <form method="get" action="/search">
+        <div class="row"><input type="text" name="code" placeholder="e.g., COS333" /></div>
+        <div class="row"><input type="submit" value="Search" /></div>
+      </form>
+      <p class="muted">Search a course code, then select sections to watch.</p>
+    </div>
+  </div>
 
-  <hr />
-  <h3>Add Course</h3>
-  <form method="get" action="/search">
-    <div class="row"><input type="text" name="code" placeholder="e.g., COS333" /></div>
-    <div class="row"><input type="submit" value="Search" /></div>
-  </form>
+  <div class="row"></div>
+
+  <div class="card">
+    <div class="section-title">Your Subscriptions</div>
+    {% if subs %}
+      <table>
+        <thead>
+          <tr><th>Course</th><th>Section</th><th>ClassID</th><th>CourseID</th><th>Last Notified</th><th></th></tr>
+        </thead>
+        <tbody>
+          {% for s in subs %}
+            <tr>
+              <td>{{ s.course_code }}</td>
+              <td><span class="badge">{{ s.section }}</span></td>
+              <td>{{ s.classid }}</td>
+              <td class="muted">{{ s.course_id }}</td>
+              <td class="muted">{{ (s.last_notified_at.strftime('%Y-%m-%d %H:%M:%S') if s.last_notified_at else '-') ~ ' • ' ~ (s.last_notified_open if s.last_notified_open>=0 else '-') }}</td>
+              <td>
+                <form method="post" action="/unsubscribe/{{ s.id }}">
+                  <button class="btn danger" type="submit">Remove</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="muted">No subscriptions yet.</p>
+    {% endif %}
+  </div>
 {% endblock %}
-

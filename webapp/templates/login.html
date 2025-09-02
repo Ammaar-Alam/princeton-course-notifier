@@ -1,10 +1,28 @@
 {% extends 'layout.html' %}
 {% block content %}
-  <h2>Login</h2>
-  <p class="muted">Enter your access token to manage your subscriptions.</p>
-  <form method="post">
-    <div class="row"><input type="text" name="token" placeholder="Access token" /></div>
-    <div class="row"><input type="submit" value="Continue" /></div>
-  </form>
-{% endblock %}
+  <div class="grid">
+    <div class="card">
+      <div class="section-title">Login</div>
+      <p class="muted">Enter your access token to manage your subscriptions.</p>
+      <form method="post">
+        <div class="row"><input type="text" name="token" placeholder="Access token" /></div>
+        <div class="row"><input type="submit" value="Continue" /></div>
+      </form>
+    </div>
 
+    <div class="card">
+      <div class="section-title">About This App</div>
+      <p>
+        This is a personal Course Sniper that queries the Princeton Student App API on a very tight interval so I can grab open seats fast.
+      </p>
+      <ul class="muted">
+        <li>Polling cadence: configurable down to every 1 second (this instance: {{ poll_interval }}s).</li>
+        <li>Re‑notify throttle: {{ renotify_secs }}s (sends another alert if the open count stays the same after this delay).</li>
+        <li>Compared to TigerSnatch’s default scheduler (~2–3 minutes), this runs much more frequently.</li>
+      </ul>
+      <p class="muted">
+        It’s built for my own use (and maybe a friend or two). Set your ntfy topic after login to receive push notifications on your phone.
+      </p>
+    </div>
+  </div>
+{% endblock %}
