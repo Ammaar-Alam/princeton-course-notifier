@@ -13,15 +13,10 @@
     <div class="card">
       <div class="section-title">About This App</div>
       <p>
-        This is a personal Course Sniper that queries the Princeton Student App API on a very tight interval so I can grab open seats fast.
+        I built this to beat TigerSnatch to open seats. TigerSnatch checks every three minutes; this polls much faster (every 1second), so I get the first look when a seat opens; so I easily steal seats before anyone else hehehe.
       </p>
-      <ul class="muted">
-        <li>Polling cadence: configurable down to every 1 second (this instance: {{ poll_interval }}s).</li>
-        <li>Re‑notify throttle: {{ renotify_secs }}s (sends another alert if the open count stays the same after this delay).</li>
-        <li>Compared to TigerSnatch’s default scheduler (~2–3 minutes), this runs much more frequently.</li>
-      </ul>
       <p class="muted">
-        It’s built for my own use (and maybe a friend or two). Set your ntfy topic after login to receive push notifications on your phone.
+        Current config: polls every {{ poll_interval }}s and will text me again after {{ renotify_secs }}s if the count stays open. Built as a personal tool for me, code is not open source, but either way you would need an access token 🦭
       </p>
     </div>
   </div>
